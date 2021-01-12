@@ -33,6 +33,7 @@
         .container{
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
             align-items: center;
             width: 80%;
             height: 100%;
@@ -66,6 +67,15 @@
             padding: 0 2px;
             font-family: 'Poppins', sans-serif;
         }
+        .card{
+            background-color: rgb(45, 23, 63);
+            padding: 20px;
+            margin: 10px 5px;
+            border-radius: 10px;
+            width: calc(100% / 8);
+            height: 300px;
+            color: white;
+        }
     </style>
     <title>Boolfix</title>
 </head>
@@ -84,10 +94,10 @@
         <main id="main">
             <div class="container">
                 <div v-for="movie in movies" class="movie-preview card">
-                    <span class="title">{{movie.title}}</span>
-                    <span class="original-title">{{movie.original_title}}</span>
-                    <span class="language">{{movie.original_language}}</span>
-                    <span class="vote">{{movie.vote_average}}</span>
+                    <div class="title">Title: {{movie.title}}</div>
+                    <div class="original-title">Original Title: {{movie.original_title}}</div>
+                    <div class="language">Language: {{movie.original_language}}</div>
+                    <div class="vote">Vote: {{movie.vote_average}}</div>
                 </div>
             </div>
         </main>
