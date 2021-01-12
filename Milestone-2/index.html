@@ -52,7 +52,7 @@
             align-items: center;
         }
         .search-btn{
-            margin: 0 20px;
+            margin-left: 20px;
             padding: 5px;
             border-radius: 5px;
             border: 1px solid rgb(233, 7, 56);
@@ -70,13 +70,18 @@
             font-family: 'Poppins', sans-serif;
         }
         .card{
-            background-color: rgb(45, 23, 63);
+            background-color: #1b1b1b;
             padding: 20px;
-            margin: 10px 5px;
-            border-radius: 10px;
-            width: calc(100% / 8);
+            width: calc(100% / 6);
             height: 300px;
             color: white;
+        }
+        .movie-preview{
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            background-color: rgb(45, 23, 63);
+            border-radius: 10px;
         }
         .flag{
             display: block;
@@ -99,15 +104,16 @@
         <!-- /nav -->
         <main id="main">
             <div class="container">
-                <div v-for="movie in moviesMap" class="movie-preview card">
-                    <div class="title">Title: {{movie.title}}</div>
-                    <div class="original-title">Original Title: {{movie.original_title}}</div>
-                    <img class="flag" :src="'img/flags/128x128/'+ movie.original_language +'.png'" :alt="movie.original_language">
-                    <!-- <div class="language">Language: {{movie.original_language}}</div> -->
-                    <span v-for="vote in movie.vote_average" class="vote">
-                        <i v-if="vote" class="fas fa-star"></i>
-                        <i v-else class="far fa-star"></i>
-                    </span>
+                <div v-for="movie in moviesMap" class="card">
+                    <div class="movie-preview">
+                        <div class="title">Title: {{movie.title || movie.name}}</div>
+                        <div class="original-title">Original Title: {{movie.original_title || movie.original_name}}</div>
+                        <img class="flag" :src="'img/flags/128x128/'+ movie.original_language +'.png'" :alt="movie.original_language">
+                        <span v-for="vote in movie.vote_average" class="vote">
+                            <i v-if="vote" class="fas fa-star"></i>
+                            <i v-else class="far fa-star"></i>
+                        </span>
+                    </div>  
                 </div>
             </div>
         </main>

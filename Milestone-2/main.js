@@ -216,6 +216,7 @@ let app = new Vue({
                 return
             }
             //Else -> API request
+            //Movies
             let config = {
                 method: 'get',
                 url: '/3/search/movie',
@@ -229,17 +230,51 @@ let app = new Vue({
                     include_adult: false,
                 },
             };
+
             axios(config)
             .then(function (response) {
                 const movies = response.data.results;
+                //console.log(movies);
                 self.movies = movies;
-                self.mapList(movies); 
+                //self.mapList(movies);
+                //console.log(self.mapList(movies));
+
                 //MS-2 - Conversione del voto  
                 
             })//then
             .catch(function (error) {
                 console.log(error);
             })//catch
+
+            //Series
+            config = {
+                method: 'get',
+                url: '/3/search/tv',
+                baseURL: 'https://api.themoviedb.org',
+                headers: {},
+                params: {
+                    api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
+                    language: 'it',
+                    query: search,
+                    page: 1,
+                    include_adult: false,
+                },
+            };
+
+            axios(config)
+            .then(function (response) {
+                const series = response.data.results;
+                self.movies = self.movies.concat(series);
+                //console.log(self.movies);
+                
+                self.mapList(self.movies); 
+                //MS-2 - Conversione del voto  
+                
+            })//then
+            .catch(function (error) {
+                console.log(error);
+            })//catch
+
 
         },
         mapList: function(list){
@@ -259,7 +294,7 @@ let app = new Vue({
                 }
                 return element;
             });//map
-            console.log(mapList);
+            //console.log(mapList);
             return this.moviesMap = mapList;
         },
     },
@@ -274,7 +309,5 @@ let app = new Vue({
     
 });
 
-
-//Sito per convertire ISO639-1 in bandiera:
-//https://www.unknown.nu/flags/
-
+// FLAGS: https://stefangabos.github.io/world_countries/
+//Conversione ISO 639-1 > ISO 3166-1-alpha-2 code : https://github.com/lipis/flag-icon-css/issues/510
