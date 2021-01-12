@@ -78,6 +78,10 @@
             height: 300px;
             color: white;
         }
+        .flag{
+            display: block;
+            height: 30px;
+        }
     </style>
     <title>Boolfix</title>
 </head>
@@ -87,8 +91,8 @@
             <div class="container">
                 <a class="logo" href="#">Boolfix</a>
                 <div class="search-field">
-                    <input v-model="search" class="search-input" type="text">
-                    <span class="search-btn" @click="send()">Search</span>
+                    <input v-model="search" class="search-input" type="text" @keyup.enter="get()">
+                    <span class="search-btn" @click="get()">Search</span>
                 </div>
             </div>
         </nav>
@@ -98,7 +102,8 @@
                 <div v-for="movie in moviesMap" class="movie-preview card">
                     <div class="title">Title: {{movie.title}}</div>
                     <div class="original-title">Original Title: {{movie.original_title}}</div>
-                    <div class="language">Language: {{movie.original_language}}</div>
+                    <img class="flag" :src="'img/flags/128x128/'+ movie.original_language +'.png'" :alt="movie.original_language">
+                    <!-- <div class="language">Language: {{movie.original_language}}</div> -->
                     <span v-for="vote in movie.vote_average" class="vote">
                         <i v-if="vote" class="fas fa-star"></i>
                         <i v-else class="far fa-star"></i>
@@ -109,5 +114,7 @@
         <!-- /main -->
     </div>
     <script src="main.js"></script>
+    <script src="flagmap.js"></script>
+
 </body>
 </html>
