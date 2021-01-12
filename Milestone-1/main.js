@@ -19,14 +19,19 @@
 let app = new Vue({
     el: '#root',
     data: {
-        search: null,
+        search: '',
+        movies: [],
     },
     methods: {
         send: function(){
+            const self = this;
             const search = this.search;
-            
+            if (search === '' || search === null || search === NaN) {
+                return
+            }
+            //Else           
             //API request
-            let config = {
+            var config = {
                 method: 'get',
                 url: '/3/search/movie',
                 baseURL: 'https://api.themoviedb.org',
@@ -41,37 +46,16 @@ let app = new Vue({
             };
             axios(config)
             .then(function (response) {
-            console.log(response.data);
+                //console.log(response.data.results);
+                self.movies = response.data.results;
             })
             .catch(function (error) {
-            console.log(error);
-            });
-        console.log(search);    
+                console.log(error);
+            })
+            console.log(self.movies);
         }
     },
     created(){},
-    mounted(){
-        // let config = {
-        //     method: 'get',
-        //     url: '/3/search/movie',
-        //     baseURL: 'https://api.themoviedb.org',
-        //     headers: { },
-        //     params: {
-        //         api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
-        //         language: 'it',
-        //         query: this.search,
-        //         page: 1,
-        //         include_adult: false,
-        //     },
-        // };
-
-        // axios(config)
-        // .then(function (response) {
-        // console.log(response.data);
-        // })
-        // .catch(function (error) {
-        // console.log(error);
-        // });
-           
-    },
+    mounted(){},
 });
+

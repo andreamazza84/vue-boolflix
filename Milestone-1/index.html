@@ -82,7 +82,14 @@
         </nav>
         <!-- /nav -->
         <main id="main">
-
+            <div class="container">
+                <div v-for="movie in movies" class="movie-preview card">
+                    <span class="title">{{movie.title}}</span>
+                    <span class="original-title">{{movie.original_title}}</span>
+                    <span class="language">{{movie.original_language}}</span>
+                    <span class="vote">{{movie.vote_average}}</span>
+                </div>
+            </div>
         </main>
         <!-- /main -->
     </div>
