@@ -47,7 +47,7 @@ let app = new Vue({
                 return
             }
             //Else -> API request
-            var config = {
+            let config = {
                 method: 'get',
                 url: '/3/search/movie',
                 baseURL: 'https://api.themoviedb.org',
@@ -62,20 +62,32 @@ let app = new Vue({
             };
             axios(config)
             .then(function (response) {
-                const movies = response.data.results; 
+                const movies = response.data.results;
+                //MS-2 - Conversione del voto  
                 const moviesMap = movies.map(element=>{
-                    const vote = element.vote_average;
-                    element.vote_average = Math.ceil(vote/2);
+                    let vote = element.vote_average;
+                    //conversione in array
+                    element.vote_average = [0, 0, 0, 0, 0]; 
+                    vote = Math.ceil(vote/2);
+                    //popolamento array voto
+                    for (let index = 0; index < (vote-1) ; index++) {
+                        element.vote_average[index] = 1;
+                    }
                     return element;
-                }); 
+                });//map
                 self.moviesMap = moviesMap;
-            })
+                //console.log(self.moviesMap);
+            })//then
             .catch(function (error) {
                 console.log(error);
-            })
+            })//catch
         }
     },
-    created(){},
+    created(){
+        // for (let index = 0; index < 5; index++) {
+        //     this.vote[index] = 0;
+        // }
+    },
     mounted(){},
 });
 
