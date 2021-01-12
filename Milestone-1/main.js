@@ -19,17 +19,59 @@
 let app = new Vue({
     el: '#root',
     data: {
-        search: '',
+        search: null,
     },
-    methods: {},
+    methods: {
+        send: function(){
+            const search = this.search;
+            
+            //API request
+            let config = {
+                method: 'get',
+                url: '/3/search/movie',
+                baseURL: 'https://api.themoviedb.org',
+                headers: {},
+                params: {
+                    api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
+                    language: 'it',
+                    query: search,
+                    page: 1,
+                    include_adult: false,
+                },
+            };
+            axios(config)
+            .then(function (response) {
+            console.log(response.data);
+            })
+            .catch(function (error) {
+            console.log(error);
+            });
+        console.log(search);    
+        }
+    },
     created(){},
     mounted(){
-        axios
-        .get('https://api.themoviedb.org/3/search/movie?api_key=63706bbf890cd5e59eddbb3a5912ff6b&language=it&query=star&page=1&include_adult=false')
-        .then(response => {
-            console.log(response);
-            console.log(response.data.results);
+        // let config = {
+        //     method: 'get',
+        //     url: '/3/search/movie',
+        //     baseURL: 'https://api.themoviedb.org',
+        //     headers: { },
+        //     params: {
+        //         api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
+        //         language: 'it',
+        //         query: this.search,
+        //         page: 1,
+        //         include_adult: false,
+        //     },
+        // };
 
-        })
+        // axios(config)
+        // .then(function (response) {
+        // console.log(response.data);
+        // })
+        // .catch(function (error) {
+        // console.log(error);
+        // });
+           
     },
 });
