@@ -18,8 +18,18 @@
 
 let app = new Vue({
     el: '#root',
-    data: {},
+    data: {
+        search: '',
+    },
     methods: {},
     created(){},
-    mounted(){},
+    mounted(){
+        axios
+        .get('https://api.themoviedb.org/3/search/movie?api_key=63706bbf890cd5e59eddbb3a5912ff6b&language=it&query=star&page=1&include_adult=false')
+        .then(response => {
+            console.log(response);
+            console.log(response.data.results);
+
+        })
+    },
 });
