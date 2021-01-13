@@ -276,6 +276,8 @@ let app = new Vue({
                 console.log(error);
             })//catch
 
+            //Pulizia della barra di ricerca 
+            this.search = '';
         },
         mapList: function(list){
             const mapList = list.map(element=>{

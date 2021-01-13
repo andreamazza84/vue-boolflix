@@ -32,17 +32,19 @@
             <div class="container">
                 <div v-for="movie in moviesMap" class="card">
 
-                    <div class="movie-preview" :style="{ 'background-image': 'url(http://image.tmdb.org/t/p/w342/' + movie.poster_path + ')' }">
-                        <div class="movie-description">
-                            <span class="title">Title: {{movie.title || movie.name}}</span>
-                            <span class="original-title">Original Title: {{movie.original_title || movie.original_name}}</span>
-                            <img class="flag" :src="'../img/flags/128x128/'+ movie.original_language +'.png'" :alt="movie.original_language">
-                            <span v-for="vote in movie.vote_average" class="vote">
-                                <i v-if="vote" class="fas fa-star"></i>
-                                <i v-else class="far fa-star"></i>
-                            </span>
-                        </div>    
+                    <div class="movie-preview">
+                        <img class="poster" :src="'http://image.tmdb.org/t/p/w342/' + movie.poster_path" alt="../img/backdrop/no-poster.jpg">
                     </div>  
+                    
+                    <div class="movie-description">
+                        <span class="title">{{movie.title || movie.name}}</span>
+                        <!-- <span class="original-title">Original Title: {{movie.original_title || movie.original_name}}</span> -->
+                        <img class="flag" :src="'../img/flags/128x128/'+ movie.original_language +'.png'" :alt="movie.original_language">
+                        <span v-for="vote in movie.vote_average" class="vote">
+                            <i v-if="vote" class="fas fa-star"></i>
+                            <i v-else class="far fa-star"></i>
+                        </span>
+                    </div>    
 
 
                 </div> <!-- /V-for -->
@@ -55,3 +57,5 @@
 
 </body>
 </html>
+
+<!-- :style="{ 'background-image': 'url(http://image.tmdb.org/t/p/w342/' + movie.poster_path + ')' }" -->
