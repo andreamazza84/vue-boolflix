@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
+    <!-- VueJs - development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <title>Boolfix</title>
+</head>
+<body>
+    <div id="root">
+        <nav id="navbar">
+            <div class="container">
+                <a class="logo" href="#"><img src="https://image.tmdb.org/t/p/w342/wwemzKWzjKYJFfCeiB57q3r4Bcm.png" alt="[logo]"></a>
+                <div class="search-field">
+                    <input v-model="search" class="search-input" type="text" @keyup.enter="get()">
+                    <span class="search-btn" @click="get()">Search</span>
+                </div>
+            </div>
+        </nav>
+        <!-- /nav -->
+        <main id="main">
+            <div class="container">
+                <div v-for="movie in moviesMap" class="card">
+                    <div class="movie-preview">
+                        <img class="poster" :src="'http://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="[movie poster]">
+                        <div class="title">Title: {{movie.title || movie.name}}</div>
+                        <div class="original-title">Original Title: {{movie.original_title || movie.original_name}}</div>
+                        <img class="flag" :src="'img/flags/128x128/'+ movie.original_language +'.png'" :alt="movie.original_language">
+                        <span v-for="vote in movie.vote_average" class="vote">
+                            <i v-if="vote" class="fas fa-star"></i>
+                            <i v-else class="far fa-star"></i>
+                        </span>
+                    </div>  
+                </div>
+            </div>
+        </main>
+        <!-- /main -->
+    </div>
+    <script src="main.js"></script>
+    <script src="flagmap.js"></script>
+
+</body>
+</html>
