@@ -31,23 +31,27 @@
         <main id="main">
             <div class="container">
                 <div v-for="movie in moviesMap" class="card">
-                    <div class="movie-preview">
-                        <img class="poster" :src="'http://image.tmdb.org/t/p/w342/' + movie.poster_path" alt="[movie poster]">
-                        <div class="title">Title: {{movie.title || movie.name}}</div>
-                        <div class="original-title">Original Title: {{movie.original_title || movie.original_name}}</div>
-                        <img class="flag" :src="'../img/flags/128x128/'+ movie.original_language +'.png'" :alt="movie.original_language">
-                        <span v-for="vote in movie.vote_average" class="vote">
-                            <i v-if="vote" class="fas fa-star"></i>
-                            <i v-else class="far fa-star"></i>
-                        </span>
+
+                    <div class="movie-preview" :style="{ 'background-image': 'url(http://image.tmdb.org/t/p/w342/' + movie.poster_path + ')' }">
+                        <div class="movie-description">
+                            <span class="title">Title: {{movie.title || movie.name}}</span>
+                            <span class="original-title">Original Title: {{movie.original_title || movie.original_name}}</span>
+                            <img class="flag" :src="'../img/flags/128x128/'+ movie.original_language +'.png'" :alt="movie.original_language">
+                            <span v-for="vote in movie.vote_average" class="vote">
+                                <i v-if="vote" class="fas fa-star"></i>
+                                <i v-else class="far fa-star"></i>
+                            </span>
+                        </div>    
                     </div>  
-                </div>
+
+
+                </div> <!-- /V-for -->
             </div>
         </main>
         <!-- /main -->
     </div>
     <script src="main.js"></script>
-    <script src="flagmap.js"></script>
+    <!-- <script src="flagmap.js"></script> -->
 
 </body>
 </html>
