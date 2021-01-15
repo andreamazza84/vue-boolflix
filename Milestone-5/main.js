@@ -75,7 +75,8 @@ let app = new Vue({
         cast: [],
         movieID: null,
         show: false,
-        showmore: 'more',
+        movieGenresMAP: null,
+        TVgenresMAP: null,
         //flag
     },
     methods: {
@@ -105,12 +106,7 @@ let app = new Vue({
             axios(config)
             .then(function (response) {
                 const movies = response.data.results;
-                //console.log(movies);
                 self.movies = movies;
-                //self.mapList(movies);
-                //console.log(self.mapList(movies));
-
-                //MS-2 - Conversione del voto  
                 
             })//then
             .catch(function (error) {
@@ -139,7 +135,6 @@ let app = new Vue({
                 //console.log(self.movies);
                 
                 self.mapList(self.movies); 
-                //MS-2 - Conversione del voto  
                 
             })//then
             .catch(function (error) {
@@ -151,11 +146,10 @@ let app = new Vue({
             this.lastSearch = search;
         },
         movieIDpass: function (movieID) {
-            return this.movieID = movieID;
+            this.movieID = movieID;
         },
         mouseLeave: function () {
             this.show = false;
-            this.showmore = 'more';
             this.cast = null;
         },
         getCast: function(movieID){
@@ -165,7 +159,6 @@ let app = new Vue({
             }
             if(this.show === false){
                 this.show = true;
-                this.showmore = 'less';
 
                 let config = {
                     method: 'get',
@@ -183,7 +176,7 @@ let app = new Vue({
                 let cast = response.data.cast;
                 //I primi 5 attori
                 cast = [cast[0].name, cast[1].name, cast[2].name, cast[3].name, cast[4].name]; 
-                return self.cast = cast;
+                self.cast = cast;
                 })//then
 
             .catch(function (error) {
@@ -193,21 +186,25 @@ let app = new Vue({
             }
             else{
                 this.show = false;
-                this.showmore = 'more';
-                return self.cast = null;
+                self.cast = null;
             }
             
         },
-
         mapList: function(list){
             const mapList = list.map(element=>{
                 let vote = element.vote_average;
                 const lang = element.original_language;
-                const imgURL =  this.posterURI + element.poster_path 
+                const imgURL =  this.posterURI + element.poster_path; 
+                const genre = element.genre_ids;
                 //conversione in array
                 element.vote_average = [0, 0, 0, 0, 0];
-                //Conversione ISO 639-1 > ISO 3166-1-alpha-2 code 
+                //Conversione ISO 639-1 > ISO 3166-1-alpha-2 code
                 element.original_language = this.flagCodeMap[lang];
+                //Conversione generi
+                console.log(genre);
+                element.genre_ids = this.movieGenresMAP.genre[genre[0]];
+                console.log(this.movieGenresMAP.genres); 
+                console.log(element.genre_ids);
                 //Indirizzo URL copertina completo
                 if (element.poster_path === null) {
                     element.poster_path = this.fallbackPoster;
@@ -226,16 +223,63 @@ let app = new Vue({
             });//map
             
             console.log(mapList);
-            return this.moviesMap = mapList;
+            this.moviesMap = mapList;
+        },
+        getGenre: function (genreID) {
+            console.log(genreID);
+
+            
         },
     },
+    
     created(){
-    },
-    mounted(){
+        self = this;
+        let config = {
+            method: 'get',
+            url: `/3/genre/movie/list?`,
+            baseURL: 'https://api.themoviedb.org',
+            headers: {},
+            params: {
+                api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
+                language: 'it_IT',
+                },           
+            };
     
+        axios(config)
+        .then(function (response) {
+            const movieGenres = response.data;
+            self.movieGenresMAP = movieGenres;
+            console.log(self.movieGenresMAP);
+        })//then
+
+        .catch(function (error) {
+            console.log(error);
+        })//catch 
+        
+        config = {
+            method: 'get',
+            url: `/3/genre/tv/list?`,
+            baseURL: 'https://api.themoviedb.org',
+            headers: {},
+            params: {
+                api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
+                language: 'it_IT',
+                },           
+            };
+    
+        axios(config)
+        .then(function (response) {
+            const TVgenres = response.data;
+            //console.log(TVgenres);
+            self.TVgenresMAP = TVgenres;
+        })//then
+
+        .catch(function (error) {
+            console.log(error);
+        })//catch          
     },
     
-});
+}); 
 
 // FLAGS: https://stefangabos.github.io/world_countries/
 //Conversione ISO 639-1 > ISO 3166-1-alpha-2 code : https://github.com/lipis/flag-icon-css/issues/510
