@@ -74,6 +74,8 @@ let app = new Vue({
         posterURI: 'http://image.tmdb.org/t/p/w342',
         cast: [],
         movieID: null,
+        show: false,
+        showmore: 'more',
         //flag
     },
     methods: {
@@ -151,36 +153,49 @@ let app = new Vue({
         movieIDpass: function (movieID) {
             return this.movieID = movieID;
         },
+        mouseLeave: function () {
+            this.show = false;
+            this.showmore = 'more';
+            this.cast = null;
+        },
         getCast: function(movieID){
+            const self = this;
             if (movieID === '' || movieID === null || movieID === NaN) {
                 return
             }
-            const self = this;
-            
+            if(this.show === false){
+                this.show = true;
+                this.showmore = 'less';
 
-            let config = {
-                method: 'get',
-                url: `/3/movie/${movieID}/credits?`,
+                let config = {
+                    method: 'get',
+                    url: `/3/movie/${movieID}/credits?`,
                 baseURL: 'https://api.themoviedb.org',
                 headers: {},
                 params: {
                     api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
                     language: 'it_IT',
-                },           
-            };
-
+                    },           
+                };
+            
             axios(config)
             .then(function (response) {
                 let cast = response.data.cast;
+                //I primi 5 attori
                 cast = [cast[0].name, cast[1].name, cast[2].name, cast[3].name, cast[4].name]; 
-                self.cast = cast;
-                console.log(cast);
-                
-            })//then
+                return self.cast = cast;
+                })//then
+
             .catch(function (error) {
                 console.log(error);
-            })//catch
+                })//catch            
             
+            }
+            else{
+                this.show = false;
+                this.showmore = 'more';
+                return self.cast = null;
+            }
             
         },
 
@@ -217,6 +232,7 @@ let app = new Vue({
     created(){
     },
     mounted(){
+    
     },
     
 });
