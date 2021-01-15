@@ -22,8 +22,8 @@
             <div class="container">
                 <a class="logo" href="#"><img src="https://image.tmdb.org/t/p/w342/wwemzKWzjKYJFfCeiB57q3r4Bcm.png" alt="[logo]"></a>
                 <div class="search-field">
-                    <input v-model="search" class="search-input" type="text" @keyup.enter="get()">
-                    <span class="search-btn" @click="get()">Search</span>
+                    <input v-model="search" class="search-input" type="text" @keyup.enter="getMovie()">
+                    <span class="search-btn" @click="getMovie()">Search</span>
                 </div>
             </div>
         </nav>
@@ -35,7 +35,7 @@
 
                 <div v-for="movie in moviesMap" class="card">
 
-                    <div class="movie-preview" :style="{ 'background-image': 'url(' + movie.poster_path + ')' }">
+                    <div class="movie-preview" :style="{ 'background-image': 'url(' + movie.poster_path + ')' }" @mouseover="movieIDpass(movie.id)">
                         <div class="movie-description">
                             <div class="title">Title: {{movie.title || movie.name}}</div>
                             <div class="original-title">Original Title: {{movie.original_title || movie.original_name}}</div>
@@ -45,6 +45,17 @@
                                 <i v-else class="far fa-star"></i>
                             </span>
                             <div class="abstract">{{movie.overview}}</div>
+                            <div class="show-more" @click="getCast(movie.id)">
+                                show more
+                                <ul v-for="actors in cast">
+                                    <li>{{actors}}</li>
+                                <ul>
+                                <!-- <ul v-for="genre in genres">
+                                    <li>{{genre}}</li>
+                                </ul> -->
+                            </div>
+
+
                         </div>
                     </div>
 

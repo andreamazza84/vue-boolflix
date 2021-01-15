@@ -55,7 +55,12 @@
 // ● Andando con il mouse sopra una card (on hover), appaiono le informazioni
 // aggiuntive già prese nei punti precedenti più la overview
 
-//import { flagCodeMap } from /flagmap.js;
+// Milestone 5:
+// Partendo da un film o da una serie, richiedere all'API quali sono gli attori
+// che fanno parte del cast aggiungendo alla nostra scheda Film / Serie 
+// SOLO i primi 5 restituiti dall’API con Nome e Cognome, e i generi associati 
+// al film con questo schema: “Genere 1, Genere 2, …”.
+
 
 let app = new Vue({
     el: '#root',
@@ -65,13 +70,15 @@ let app = new Vue({
         movies: [],
         moviesMap: [],
         flagCodeMap: flagCodeMap, //importata da '../flagmap.js' 
-        fallbackPoster: '../img/fallbackimg/no-poster.jpg', 
+        fallbackPoster: '../img/fallbackimg/no-poster.png', 
         posterURI: 'http://image.tmdb.org/t/p/w342',
+        cast: [],
+        movieID: null,
         //flag
     },
     methods: {
         //Richiesta API per popolare la lista dei film che corrispondono alla ricerca
-        get: function(){
+        getMovie: function(){
             const self = this;
             const search = this.search;
             if (search === '' || search === null || search === NaN) {
@@ -141,6 +148,42 @@ let app = new Vue({
             this.search = '';
             this.lastSearch = search;
         },
+        movieIDpass: function (movieID) {
+            return this.movieID = movieID;
+        },
+        getCast: function(movieID){
+            if (movieID === '' || movieID === null || movieID === NaN) {
+                return
+            }
+            const self = this;
+            
+
+            let config = {
+                method: 'get',
+                url: `/3/movie/${movieID}/credits?`,
+                baseURL: 'https://api.themoviedb.org',
+                headers: {},
+                params: {
+                    api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
+                    language: 'it_IT',
+                },           
+            };
+
+            axios(config)
+            .then(function (response) {
+                let cast = response.data.cast;
+                cast = [cast[0].name, cast[1].name, cast[2].name, cast[3].name, cast[4].name]; 
+                self.cast = cast;
+                console.log(cast);
+                
+            })//then
+            .catch(function (error) {
+                console.log(error);
+            })//catch
+            
+            
+        },
+
         mapList: function(list){
             const mapList = list.map(element=>{
                 let vote = element.vote_average;
