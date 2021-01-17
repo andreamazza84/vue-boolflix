@@ -47,16 +47,18 @@
                             <div class="abstract">{{movie.overview}}</div>
                             <div class="show-more">
                                 <div @click="getInfo(movie.id, movie.genre_ids)">Show {{show?'less':'more'}}</div>    
-                                <div class="cast" :class="(show)?'active':''"> 
-                                    <span>Actors:</span>
-                                    <ul v-for="actor in cast">
-                                        <li>{{actor}}</li>
-                                    <ul>
+                                <div class="cast-genres" :class="(show)?'active':''"> 
+                                    <div v-if="show" class="info">Actors:
+                                        <ul v-for="actor in cast.slice(0,4)">
+                                            <li>{{actor}}</li>
+                                        <ul>
+                                    </div>
+                                    <div v-if="show" class="info">Genres:
+                                        <ul v-for="genre in genres.slice(0,4)">
+                                            <li>{{genre}}</li>
+                                        <ul>
+                                    </div>
                                 </div>
-                                
-                                <!-- <ul v-for="genre in genres">
-                                    <li>{{genre}}</li>
-                                </ul> -->
                             </div>
 
 

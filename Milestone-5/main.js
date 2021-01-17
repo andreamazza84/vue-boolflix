@@ -151,7 +151,7 @@ let app = new Vue({
         },
         mouseLeave: function () {
             this.show = false;
-            this.cast = null;
+            this.cast = [];
         },
         getInfo: function(movieID, genreID){
             const self = this;
@@ -180,8 +180,9 @@ let app = new Vue({
             axios(config)
             .then(function (response) {
                 let cast = response.data.cast;
-                //I primi 5 attori
-                cast = [cast[0].name, cast[1].name, cast[2].name, cast[3].name, cast[4].name]; 
+                cast = cast.map(element =>{
+                    return element = element.name;
+                });
                 self.cast = cast;
                 })//then
 
@@ -195,10 +196,11 @@ let app = new Vue({
                 return this.genres.push(element);
             });
             console.log(this.genres);
+            console.log(this.genres.slice(0,5));
             }
             else{
                 this.show = false;
-                self.cast = null;
+                self.cast = [];
             }
             
         },
@@ -207,8 +209,6 @@ let app = new Vue({
                 let vote = element.vote_average;
                 const lang = element.original_language;
                 const imgURL =  this.posterURI + element.poster_path;
-                const genres = element.genre_ids;
-                console.log(genres);
                 //conversione in array
                 element.vote_average = [0, 0, 0, 0, 0];
                 //Conversione ISO 639-1 > ISO 3166-1-alpha-2 code
@@ -226,33 +226,12 @@ let app = new Vue({
                 for (let index = 0; index < vote ; index++) {
                     element.vote_average[index] = 1;
                 }
-
-
-
-
                 return element;
             });//map
          
             console.log(mapList);
             this.moviesMap = mapList;
         },
-        
-        // mapGenre: function (list, map) {
-        //     //const genre = element.genre_ids;
-        //     map.forEach(element => {
-        //     //     element.id === 
-        //     // });
-
-        //     for (const key in object) {
-        //         if (Object.hasOwnProperty.call(object, key)) {
-        //             const element = object[key];
-                    
-        //         }
-        //     }
-        //     for (const iterator of object) {
-                
-        //     }
-        // },
     },
     
     created(){
