@@ -75,8 +75,9 @@ let app = new Vue({
         cast: [],
         movieID: null,
         show: false,
-        movieGenresMAP: null,
-        TVgenresMAP: null,
+        movieGenresMAP: [],
+        TVgenresMAP: [],
+        genres: [],
         //flag
     },
     methods: {
@@ -152,11 +153,16 @@ let app = new Vue({
             this.show = false;
             this.cast = null;
         },
-        getCast: function(movieID){
+        getInfo: function(movieID, genreID){
             const self = this;
+            this.genres = [];
             if (movieID === '' || movieID === null || movieID === NaN) {
                 return
             }
+            if (genreID === '' || movieID === null || movieID === NaN) {
+                return
+            }
+            //Actors
             if(this.show === false){
                 this.show = true;
 
@@ -183,6 +189,12 @@ let app = new Vue({
                 console.log(error);
                 })//catch            
             
+            //Genres
+            genreID.forEach(element => {
+                element = this.movieGenresMAP.get(element);
+                return this.genres.push(element);
+            });
+            console.log(this.genres);
             }
             else{
                 this.show = false;
@@ -194,19 +206,15 @@ let app = new Vue({
             const mapList = list.map(element=>{
                 let vote = element.vote_average;
                 const lang = element.original_language;
-                const imgURL =  this.posterURI + element.poster_path; 
-                const genre = element.genre_ids;
+                const imgURL =  this.posterURI + element.poster_path;
+                const genres = element.genre_ids;
+                console.log(genres);
                 //conversione in array
                 element.vote_average = [0, 0, 0, 0, 0];
                 //Conversione ISO 639-1 > ISO 3166-1-alpha-2 code
                 element.original_language = this.flagCodeMap[lang];
-                //Conversione generi
-                console.log(genre);
-                element.genre_ids = this.movieGenresMAP.genre[genre[0]];
-                console.log(this.movieGenresMAP.genres); 
-                console.log(element.genre_ids);
                 //Indirizzo URL copertina completo
-                if (element.poster_path === null) {
+                if (element.poster_path === null || element.poster_path === '' || element.poster_path === NaN) {
                     element.poster_path = this.fallbackPoster;
                 }
                 else{
@@ -218,18 +226,33 @@ let app = new Vue({
                 for (let index = 0; index < vote ; index++) {
                     element.vote_average[index] = 1;
                 }
-                //console.log(img);
+
+
+
+
                 return element;
             });//map
-            
+         
             console.log(mapList);
             this.moviesMap = mapList;
         },
-        getGenre: function (genreID) {
-            console.log(genreID);
+        
+        // mapGenre: function (list, map) {
+        //     //const genre = element.genre_ids;
+        //     map.forEach(element => {
+        //     //     element.id === 
+        //     // });
 
-            
-        },
+        //     for (const key in object) {
+        //         if (Object.hasOwnProperty.call(object, key)) {
+        //             const element = object[key];
+                    
+        //         }
+        //     }
+        //     for (const iterator of object) {
+                
+        //     }
+        // },
     },
     
     created(){
@@ -247,9 +270,15 @@ let app = new Vue({
     
         axios(config)
         .then(function (response) {
-            const movieGenres = response.data;
-            self.movieGenresMAP = movieGenres;
-            console.log(self.movieGenresMAP);
+            const genres = response.data.genres;
+            //console.log(self.movieGenresMAP);
+            let map = new Map();
+            genres.forEach(element => {
+                map.set(element.id, element.name);
+            });
+            console.log(map);
+            self.movieGenresMAP = map;
+            console.log(map.get(28));
         })//then
 
         .catch(function (error) {

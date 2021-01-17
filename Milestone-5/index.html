@@ -46,7 +46,7 @@
                             </span>
                             <div class="abstract">{{movie.overview}}</div>
                             <div class="show-more">
-                                <div @click="getCast(movie.id)">Show {{show?'less':'more'}}</div>    
+                                <div @click="getInfo(movie.id, movie.genre_ids)">Show {{show?'less':'more'}}</div>    
                                 <div class="cast" :class="(show)?'active':''"> 
                                     <span>Actors:</span>
                                     <ul v-for="actor in cast">
