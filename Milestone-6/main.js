@@ -200,7 +200,7 @@ let app = new Vue({
             });
             self.moviesGenresMAP = map;
             self.moviesGenresRevMap = revmap;
-            self.moviesGenres = [];
+            self.moviesGenres = moviesGenres;
             //console.log(map.get("Action"));
         })//then
 
@@ -231,8 +231,7 @@ let app = new Vue({
         .catch(function (error) {
             console.log(error);
         })//catch    
-        
-        
+              
     },
     
 }); 
