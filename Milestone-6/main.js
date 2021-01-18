@@ -26,6 +26,7 @@ let app = new Vue({
         seriesGenresRevMap: {},
         moviesGenres: [],
         seriesGenres: [],
+        allGenres: {},
     },
     methods: {
         //Richiesta API per popolare la lista dei film che corrispondono alla ricerca
@@ -186,21 +187,22 @@ let app = new Vue({
     
     created(){
         self = this;
+        let allGenres = {movies:[], series:[]};
         //Generi disponibili per i film
         axios(configMovieGenres)
         .then(function (response) {
             const genres = response.data.genres;
             let map = new Map();
             let revmap = new Map();
-            let moviesGenres = [];
+            //let moviesGenres;
             genres.forEach(element => {
                 map.set(element.id, element.name);
                 revmap.set(element.name, element.id);
-                moviesGenres.push(element.name);
+                allGenres.movies.push(element.name);
             });
             self.moviesGenresMAP = map;
             self.moviesGenresRevMap = revmap;
-            self.moviesGenres = moviesGenres;
+            //self.moviesGenres = moviesGenres;
             //console.log(map.get("Action"));
         })//then
 
@@ -214,24 +216,26 @@ let app = new Vue({
             const genres = response.data.genres;
             let map = new Map();
             let revmap = new Map();
-            let seriesGenres = [];
+            //let seriesGenres;
             genres.forEach(element => {
                 map.set(element.id, element.name);
                 revmap.set(element.name, element.id);
-                seriesGenres.push(element.name);
+                //seriesGenres.push(element.name);
+                allGenres.series.push(element.name);
             });
             self.seriesGenresMAP = map;
             self.seriesGenresRevMap = revmap;
-            self.seriesGenres = seriesGenres;
+            //self.seriesGenres = seriesGenres;
 
-            console.log(revmap.get("Animation"));
+            //console.log(revmap.get("Animation"));
 
         })//then
 
         .catch(function (error) {
             console.log(error);
         })//catch    
-              
+        console.log(allGenres);
+        self.allGenres = allGenres;
     },
     
 }); 

@@ -43,7 +43,7 @@
                     <h3>{{index}}</h3>
 
                     <ul class="navbar-bottom">
-                        <li v-for="genre in moviesGenres" @click="genreFilter(genre, index)">{{genre}}</li>
+                        <li v-for="genre in allGenres[index]" @click="genreFilter(genre, index)">{{genre}}</li>
                     </ul>
 
                     <div class="type">
