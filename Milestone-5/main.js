@@ -3,18 +3,16 @@ let app = new Vue({
     data: {
         search: '',
         lastSearch: false,
-        movies: [],
-        series: [],
         items: {},
         mapMovies: [],
         mapSeries: [],
         fallbackPoster: '../img/fallbackimg/no-poster.png', 
         posterURI: 'http://image.tmdb.org/t/p/w342',
-        cast: [],
-        movieID: null,
         show: false,
-        movieGenresMAP: [],
-        TVgenresMAP: [],
+        movieID: null,
+        cast: [],
+        moviesGenresMAP: [],
+        seriesGenresMAP: [],
         genres: [],
         flagCodeMap: flagCodeMap, //importata da '../flagmap.js'
     },
@@ -83,12 +81,6 @@ let app = new Vue({
             this.search = '';
             this.lastSearch = search;
 
-            console.log(this.mapMovies);
-            Vue.set(this.items, 'movies', this.mapMovies);
-            Vue.set(this.items, 'series', this.mapSeries);
-            console.log(this.items);
-
-
         },
         movieIDpass: function (movieID) {
             this.movieID = movieID;
@@ -97,48 +89,88 @@ let app = new Vue({
             this.show = false;
             this.cast = [];
         },
-        getInfo: function(movieID, genreID){
-            const self = this;
-            this.genres = [];
+        getInfo: function(movieID, genreID, type){
             if (movieID === '' || movieID === null || movieID === NaN) {
                 return
             }
-            if (genreID === '' || movieID === null || movieID === NaN) {
+            if (genreID === '' || genreID === null || genreID === NaN) {
                 return
             }
+            const self = this;
+            this.genres = [];
+            
             //Actors
             if(this.show === false){
                 this.show = true;
-
-                let config = {
-                    method: 'get',
-                    url: `/3/movie/${movieID}/credits?`,
-                baseURL: 'https://api.themoviedb.org',
-                headers: {},
-                params: {
-                    api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
-                    language: 'it_IT',
-                    },           
-                };
-            
-            axios(config)
-            .then(function (response) {
-                let cast = response.data.cast;
-                cast = cast.map(element =>{
-                    return element = element.name;
-                });
-                self.cast = cast;
-                })//then
-
-            .catch(function (error) {
-                console.log(error);
-                })//catch            
-            
-            //Genres
-            genreID.forEach(element => {
-                element = this.movieGenresMAP.get(element);
-                return this.genres.push(element);
-                });
+                //*** Movies ***
+                if (type === "movies") {
+                    //let config =  configMoviesInfo;
+                    const config = {
+                        method: 'get',
+                        url: `/3/movie/${movieID}/credits?`,
+                        baseURL: 'https://api.themoviedb.org',
+                        headers: {},
+                        params: {
+                            api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
+                            language: 'it_IT',
+                            },           
+                    };
+                
+                axios(config)
+                .then(function (response) {
+                    let cast = response.data.cast;
+                    cast = cast.map(element =>{
+                        return element = element.name;
+                    });
+                    self.cast = cast;
+                    })//then
+    
+                .catch(function (error) {
+                    console.log(error);
+                    })//catch            
+                
+                //Genres
+                genreID.forEach(element => {
+                    element = this.moviesGenresMAP.get(element);
+                    return this.genres.push(element);
+                    });
+                }
+                // *** Series ***
+                else if (type === "series") {
+                    const config = {
+                        method: 'get',
+                        url: `/3/tv/${movieID}/credits?`,
+                        baseURL: 'https://api.themoviedb.org',
+                        headers: {},
+                        params: {
+                            api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
+                            language: 'it_IT',
+                        },
+                    };
+                
+                axios(config)
+                .then(function (response) {
+                    let cast = response.data.cast;
+                    cast = cast.map(element =>{
+                        return element = element.name;
+                    });
+                    self.cast = cast;
+                    })//then
+    
+                .catch(function (error) {
+                    console.log(error);
+                    })//catch            
+                
+                //Genres
+                genreID.forEach(element => {
+                    element = this.seriesGenresMAP.get(element);
+                    return this.genres.push(element);
+                    });
+                }
+                else{
+                    console.log('error');
+                    return
+                }
             }
             else{
                 this.show = false;
@@ -184,7 +216,7 @@ let app = new Vue({
             genres.forEach(element => {
                 map.set(element.id, element.name);
             });
-            self.movieGenresMAP = map;
+            self.moviesGenresMAP = map;
         })//then
 
         .catch(function (error) {
@@ -194,8 +226,12 @@ let app = new Vue({
         //Generi disponibili per le serieTV
         axios(configSeriesGenres)
         .then(function (response) {
-            const TVgenres = response.data;
-            self.TVgenresMAP = TVgenres;
+            const genres = response.data.genres;
+            let map = new Map();
+            genres.forEach(element => {
+                map.set(element.id, element.name);
+            });
+            self.seriesGenresMAP = map;
         })//then
 
         .catch(function (error) {
