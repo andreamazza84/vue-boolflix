@@ -170,15 +170,31 @@ let app = new Vue({
                 return element;
             });//map
         },
-        genreFilter: function (genre) {
-            let id = this.moviesGenresRevMap.get(genre)
-            let filter = this.items.movies.filter(element => {
-                // genre.forEach(id => {
-                    
-                    console.log(id);
+        genreFilter: function (genre, type) {
+            let id;
+            let filter;
+            if (type === "movies") {
+                id = this.moviesGenresRevMap.get(genre)
+                console.log(id);
+                filter = this.items.movies.filter(element => {
                     return element.genre_ids.includes(id); 
-                //});
-             });
+                 });
+                Vue.set(self.items, 'movies', filter);
+
+            }
+            else if (type === "series") {
+                let filter;
+                id = this.seriesGenresRevMap.get(genre) 
+                console.log(id);
+                filter = this.items.movies.filter(element => {
+                    return element.genre_ids.includes(id); 
+                });
+                Vue.set(self.items, 'series', filter);
+
+            }
+            else{
+                return
+            }
             //this.filterItems = filter;
             console.log(filter); 
         }
