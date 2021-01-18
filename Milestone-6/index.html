@@ -24,13 +24,9 @@
                     <a class="logo" href=""><img src="https://image.tmdb.org/t/p/w342/wwemzKWzjKYJFfCeiB57q3r4Bcm.png" alt="[logo]"></a>
                     <div class="search-field">
                         <input v-model="search" class="search-input" type="text" @keydown.enter="getMovie()">
-                        <span class="search-btn" @click="getMovie()">Search</span>
+                        <span class="search-btn" @click="getMovie()"><i class="fas fa-search"></i></span>
                     </div>
                 </div>
-                <!-- <ul class="navbar-bottom">
-                    <li v-for="genre in moviesGenres" @click="genreFilter(genre)">{{genre}}</li>
-                </ul> -->
-
             </div>
         </nav>
         <!-- /nav -->
@@ -46,8 +42,8 @@
                         <li v-for="genre in allGenres[index]" @click="genreFilter(genre, index), getMovie()">{{genre}}</li>
                     </ul>
 
-                    <div class="type">
-                        <div v-for="movie in filterItems[index]" class="card">
+                    <div class="display">
+                        <div v-for="movie in items[index]" class="card">
         
                             <div class="movie-preview" :style="{ 'background-image': 'url(' + movie.poster_path + ')' }" @mouseover="movieIDpass(movie.id)" @mouseleave="mouseLeave()">
                                 <div class="movie-description">
@@ -76,16 +72,11 @@
                                             </div>
                                         </div>
                                     </div>
-        
-        
                                 </div>
                             </div>
-        
                         </div> <!-- /v-for .card-->
                     </div>
-                    
                 </div>
-               
             </div>
         </main>
         <!-- /main -->

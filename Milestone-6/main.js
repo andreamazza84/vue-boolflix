@@ -6,30 +6,20 @@ let app = new Vue({
         items: {},
         series: [],
         movies: [],
-        mapMovies: [],
-        mapSeries: [],
-        fallbackPoster: '../img/fallbackimg/no-poster.png', 
         posterURI: 'http://image.tmdb.org/t/p/w342',
+        fallbackPoster: '../img/fallbackimg/no-poster.png', 
+        flagCodeMap: flagCodeMap, //importata da '../flagmap.js'
         show: false,
-        movieID: null,
+        movieID: 0,
         cast: [],
         moviesGenresMAP: [],
         seriesGenresMAP: [],
         genres: [],
-        flagCodeMap: flagCodeMap, //importata da '../flagmap.js'
-        genresMAP: {
-            "action" : 28,
-            "commedy": [4,5],
-            "adventure" : [23],
-            "drama": [12],
-            "thiller": [11]
-        },
         moviesGenresRevMap: {},
         seriesGenresRevMap: {},
         moviesGenres: [],
         seriesGenres: [],
         allGenres: {},
-        filterItems: {},
     },
     methods: {
         //Richiesta API per popolare la lista dei film che corrispondono alla ricerca
@@ -51,7 +41,6 @@ let app = new Vue({
                 self.mapList(movies);
                 self.movies = movies;
                 Vue.set(self.items, 'movies', movies);
-                Vue.set(self.filterItems, 'movies', movies);
                 
             })//then
             .catch(function (error) {
@@ -69,18 +58,16 @@ let app = new Vue({
                 self.mapList(series);
                 self.series = series;
                 Vue.set(self.items, 'series', series);
-                Vue.set(self.filterItems, 'series', series);
 
             })//then
             .catch(function (error) {
                 console.log(error);
             })//catch
 
-            //this.filterItems = this.items;
             //Pulizia della barra di ricerca 
             this.search = '';
             this.lastSearch = search;
-            //console.log(self.items);
+            console.log(self.items);
 
         },
         movieIDpass: function (movieID) {
@@ -102,7 +89,7 @@ let app = new Vue({
             this.genres = [];
             this.cast = [];
 
-            //Actors
+            // *** Actors ***
             if(this.show === false){
                 this.show = true;
                 //*** Movies ***
@@ -111,7 +98,7 @@ let app = new Vue({
                     config =  configMoviesInfo;
                     config.url = `/3/movie/${movieID}/credits?`;
                     
-                    //Genres
+                    // *** Genres ***
                     genreID.forEach(element => {
                         element = this.moviesGenresMAP.get(element);
                         return this.genres.push(element);
@@ -179,38 +166,38 @@ let app = new Vue({
             });//map
         },
         genreFilter: function (genre, type) {
-            Vue.set(this.filterItems, 'movies', this.movies);
-            Vue.set(this.filterItems, 'series', this.series);
-            if(genre === "all"){
-                Vue.set(this.filterItems, 'movies', this.movies);
-                Vue.set(this.filterItems, 'series', this.series);
-                return
-            }
-            //Else
             let id;
             let filter;
             if (type === "movies") {
+                Vue.set(this.items, 'movies', this.movies); //reset
+                if(genre === "all"){
+                    Vue.set(this.items, 'movies', this.movies);
+                    return
+                }
+                //Else
                 id = this.moviesGenresRevMap.get(genre)
-                console.log(id);
-                filter = this.filterItems.movies.filter(element => {
+                filter = this.items.movies.filter(element => {
                     return element.genre_ids.includes(id); 
                  });
-                Vue.set(this.filterItems, 'movies', filter);
-            }
+                 Vue.set(this.items, 'movies', filter);
+                }
+
             else if (type === "series") {
-                let filter;
+                Vue.set(this.items, 'series', this.series); //reset
+                if(genre === "all"){
+                    Vue.set(this.items, 'series', this.series);
+                    return
+                }
+                //Else
                 id = this.seriesGenresRevMap.get(genre) 
-                console.log(id);
-                filter = this.filterItems.movies.filter(element => {
+                filter = this.items.movies.filter(element => {
                     return element.genre_ids.includes(id); 
                 });
-                Vue.set(this.filterItems, 'series', filter);
+                Vue.set(this.items, 'series', filter);
             }
             else{
                 return
             }
-            //this.filterItems = filter;
-            console.log(filter); 
         }
     },
     
@@ -218,12 +205,12 @@ let app = new Vue({
         self = this;
         let allGenres = {movies:["all"], series:["all"]};
         //Generi disponibili per i film
+        // ***Movies***
         axios(configMovieGenres)
         .then(function (response) {
             const genres = response.data.genres;
             let map = new Map();
             let revmap = new Map();
-            //let moviesGenres;
             genres.forEach(element => {
                 map.set(element.id, element.name);
                 revmap.set(element.name, element.id);
@@ -231,8 +218,6 @@ let app = new Vue({
             });
             self.moviesGenresMAP = map;
             self.moviesGenresRevMap = revmap;
-            //self.moviesGenres = moviesGenres;
-            //console.log(map.get("Action"));
         })//then
 
         .catch(function (error) {
@@ -240,31 +225,24 @@ let app = new Vue({
         })//catch 
 
         //Generi disponibili per le serieTV
+        // ***Series***
         axios(configSeriesGenres)
         .then(function (response) {
             const genres = response.data.genres;
             let map = new Map();
             let revmap = new Map();
-            //let seriesGenres;
             genres.forEach(element => {
                 map.set(element.id, element.name);
                 revmap.set(element.name, element.id);
-                //seriesGenres.push(element.name);
                 allGenres.series.push(element.name);
             });
             self.seriesGenresMAP = map;
             self.seriesGenresRevMap = revmap;
-            //self.seriesGenres = seriesGenres;
-
-            //console.log(revmap.get("Animation"));
-
         })//then
 
         .catch(function (error) {
             console.log(error);
         })//catch    
-        console.log(allGenres);
         self.allGenres = allGenres;
     },
-    
 }); 

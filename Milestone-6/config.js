@@ -34,7 +34,7 @@ const configMoviesInfo = {
         },           
 };
 
-//Richiesta lista di tutti gli attori per movies
+//Richiesta lista di tutti gli attori per series
 const configSeriesInfo = {
     method: 'get',
     url: '',
