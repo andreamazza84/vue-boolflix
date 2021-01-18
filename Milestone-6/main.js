@@ -20,7 +20,12 @@ let app = new Vue({
             "commedy": [4,5],
             "adventure" : [23],
             "drama": [12],
-            "thiller": [11]},
+            "thiller": [11]
+        },
+        moviesGenresRevMap: {},
+        seriesGenresRevMap: {},
+        moviesGenres: [],
+        seriesGenres: [],
     },
     methods: {
         //Richiesta API per popolare la lista dei film che corrispondono alla ricerca
@@ -165,8 +170,13 @@ let app = new Vue({
             });//map
         },
         genreFilter: function (genre) {
-            const filter = this.items.movies.filter(element => {
-                return element.genre_ids.includes(genre); 
+            let id = this.moviesGenresRevMap.get(genre)
+            let filter = this.items.movies.filter(element => {
+                // genre.forEach(id => {
+                    
+                    console.log(id);
+                    return element.genre_ids.includes(id); 
+                //});
              });
             //this.filterItems = filter;
             console.log(filter); 
@@ -181,11 +191,17 @@ let app = new Vue({
         .then(function (response) {
             const genres = response.data.genres;
             let map = new Map();
+            let revmap = new Map();
+            let moviesGenres = [];
             genres.forEach(element => {
                 map.set(element.id, element.name);
+                revmap.set(element.name, element.id);
+                moviesGenres.push(element.name);
             });
             self.moviesGenresMAP = map;
-            console.log(map);
+            self.moviesGenresRevMap = revmap;
+            self.moviesGenres = moviesGenres;
+            //console.log(map.get("Action"));
         })//then
 
         .catch(function (error) {
@@ -197,11 +213,18 @@ let app = new Vue({
         .then(function (response) {
             const genres = response.data.genres;
             let map = new Map();
+            let revmap = new Map();
+            let seriesGenres = [];
             genres.forEach(element => {
                 map.set(element.id, element.name);
+                revmap.set(element.name, element.id);
+                seriesGenres.push(element.name);
             });
             self.seriesGenresMAP = map;
-            console.log(map);
+            self.seriesGenresRevMap = revmap;
+            self.seriesGenres = seriesGenres;
+
+            console.log(revmap.get("Animation"));
 
         })//then
 

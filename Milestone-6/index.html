@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <ul class="navbar-bottom">
-                    <li v-for="(genre_id, index) in genresMAP" @click="genreFilter(genre_id)">{{index}}</li>
+                    <li v-for="genre in moviesGenres" @click="genreFilter(genre)">{{genre}}</li>
                 </ul>
 
             </div>
