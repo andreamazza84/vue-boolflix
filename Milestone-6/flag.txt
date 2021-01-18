@@ -1,0 +1,2 @@
+FLAGS: https://stefangabos.github.io/world_countries/
+Conversione ISO 639-1 > ISO 3166-1-alpha-2 code : https://github.com/lipis/flag-icon-css/issues/510
