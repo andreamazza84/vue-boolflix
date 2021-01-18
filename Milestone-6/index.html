@@ -20,11 +20,17 @@
     <div id="root">
         <nav id="navbar">
             <div class="container">
-                <a class="logo" href=""><img src="https://image.tmdb.org/t/p/w342/wwemzKWzjKYJFfCeiB57q3r4Bcm.png" alt="[logo]"></a>
-                <div class="search-field">
-                    <input v-model="search" class="search-input" type="text" @keydown.enter="getMovie()">
-                    <span class="search-btn" @click="getMovie()">Search</span>
+                <div class="navbar-top">
+                    <a class="logo" href=""><img src="https://image.tmdb.org/t/p/w342/wwemzKWzjKYJFfCeiB57q3r4Bcm.png" alt="[logo]"></a>
+                    <div class="search-field">
+                        <input v-model="search" class="search-input" type="text" @keydown.enter="getMovie()">
+                        <span class="search-btn" @click="getMovie()">Search</span>
+                    </div>
                 </div>
+                <ul class="navbar-bottom">
+                    <li v-for="(genre_id, index) in genresMAP" @click="genreFilter(genre_id)">{{index}}</li>
+                </ul>
+
             </div>
         </nav>
         <!-- /nav -->
@@ -74,17 +80,13 @@
                     </div>
                     
                 </div>
-                    
-                    
-                    
-
-
+               
             </div>
         </main>
         <!-- /main -->
     </div>
     <script src="config.js"></script>
-    <script src="flagmap.js"></script>
+    <script src="maps.js"></script>
     <script src="main.js"></script>
     
 </body>

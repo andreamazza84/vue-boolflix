@@ -12,22 +12,38 @@ body{
 }
 #navbar{
     width: 100%;
-    height: 70px;
+    height: auto;
     background-color: #111;
 }
-#navbar > .container{
+#main{
+    margin-top: 50px;
+}
+.container{
+    width: 80%;
+    height: 100%;
+    margin: auto;
+}
+.navbar-top{
+    width: 100%;
+    height: 70px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    align-items: center;
-    width: 80%;
-    height: 100%;
-    margin: auto;
+    align-items: center;   
 }
-#main > .container{
-    width: 80%;
-    height: 100%;
-    margin: auto;
+.navbar-bottom{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    padding: 10px;
+    text-transform: capitalize;
+}
+.navbar-bottom > li:hover{
+    color: #dc1a28;
+    cursor: pointer;
 }
 .search-results{
     width: 100%;

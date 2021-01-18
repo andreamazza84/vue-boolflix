@@ -15,6 +15,12 @@ let app = new Vue({
         seriesGenresMAP: [],
         genres: [],
         flagCodeMap: flagCodeMap, //importata da '../flagmap.js'
+        genresMAP: {
+            "action" : 28,
+            "commedy": [4,5],
+            "adventure" : [23],
+            "drama": [12],
+            "thiller": [11]},
     },
     methods: {
         //Richiesta API per popolare la lista dei film che corrispondono alla ricerca
@@ -60,6 +66,7 @@ let app = new Vue({
             //Pulizia della barra di ricerca 
             this.search = '';
             this.lastSearch = search;
+            console.log(self.items);
 
         },
         movieIDpass: function (movieID) {
@@ -68,6 +75,7 @@ let app = new Vue({
         mouseLeave: function () {
             this.show = false;
             this.cast = [];
+            this.genres = [];
         },
         getInfo: function(movieID, genreID, type){
             if (movieID === '' || movieID === null || movieID === NaN) {
@@ -78,6 +86,7 @@ let app = new Vue({
             }
             const self = this;
             this.genres = [];
+            this.cast = [];
 
             //Actors
             if(this.show === false){
@@ -131,7 +140,7 @@ let app = new Vue({
             
         },
         mapList: function(list){
-            const map = list.map(element=>{
+            const map = list.map(element => {
                 let vote = element.vote_average;
                 const lang = element.original_language;
                 const imgURL =  this.posterURI + element.poster_path;
@@ -140,7 +149,7 @@ let app = new Vue({
                 //Conversione ISO 639-1 > ISO 3166-1-alpha-2 code
                 element.original_language = this.flagCodeMap[lang];
                 //Indirizzo URL copertina completo
-                if (element.poster_path === null || element.poster_path === '' || element.poster_path === NaN) {
+                if (element.poster_path === null || element.poster_path === '' || element.poster_path === NaN || element.poster_path === false) {
                     element.poster_path = this.fallbackPoster;
                 }
                 else{
@@ -154,8 +163,15 @@ let app = new Vue({
                 }
                 return element;
             });//map
-            
         },
+        genreFilter: function (genre) {
+            const filter = this.items.movies.filter(element => {
+                return element.genre_ids.includes(genre); 
+             });
+            //this.filterItems = filter;
+            console.log(filter); 
+        }
+    
     },
     
     created(){

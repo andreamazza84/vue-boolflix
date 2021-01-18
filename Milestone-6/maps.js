@@ -162,4 +162,11 @@ const flagCodeMap = {
         "name": "Yoruba"
     },
     "zu": "za"
-}
+};
+
+const genresMAP = [
+    {'action':[12, 28, 10579]}, 
+    {'action':[12, 28, 10579]}
+];
+
+console.log(genresMAP);
