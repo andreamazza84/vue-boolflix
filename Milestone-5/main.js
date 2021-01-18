@@ -1,12 +1,13 @@
-
-
 let app = new Vue({
     el: '#root',
     data: {
         search: '',
         lastSearch: false,
         movies: [],
-        moviesMap: [],
+        series: [],
+        items: {},
+        mapMovies: [],
+        mapSeries: [],
         fallbackPoster: '../img/fallbackimg/no-poster.png', 
         posterURI: 'http://image.tmdb.org/t/p/w342',
         cast: [],
@@ -16,7 +17,6 @@ let app = new Vue({
         TVgenresMAP: [],
         genres: [],
         flagCodeMap: flagCodeMap, //importata da '../flagmap.js'
-        //configMovie: configMovie,
     },
     methods: {
         //Richiesta API per popolare la lista dei film che corrispondono alla ricerca
@@ -37,7 +37,7 @@ let app = new Vue({
                     api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
                     language: 'it_IT',
                     query: search,
-                    page: [1],
+                    page: [1, 2],
                     include_adult: false,
                 },
             };
@@ -45,7 +45,8 @@ let app = new Vue({
             axios(config)
             .then(function (response) {
                 const movies = response.data.results;
-                self.movies = movies;
+                self.mapList(movies);
+                Vue.set(self.items, 'movies', movies);
                 
             })//then
             .catch(function (error) {
@@ -62,7 +63,7 @@ let app = new Vue({
                     api_key: '63706bbf890cd5e59eddbb3a5912ff6b',
                     language: 'it_IT',
                     query: search,
-                    page: [1],
+                    page: 1,
                     include_adult: false,
                 },
             };
@@ -70,11 +71,9 @@ let app = new Vue({
             axios(config)
             .then(function (response) {
                 const series = response.data.results;
-                self.movies = self.movies.concat(series);
-                //console.log(self.movies);
-                
-                self.mapList(self.movies); 
-                
+                self.mapList(series);
+                Vue.set(self.items, 'series', series);
+
             })//then
             .catch(function (error) {
                 console.log(error);
@@ -83,10 +82,16 @@ let app = new Vue({
             //Pulizia della barra di ricerca 
             this.search = '';
             this.lastSearch = search;
+
+            console.log(this.mapMovies);
+            Vue.set(this.items, 'movies', this.mapMovies);
+            Vue.set(this.items, 'series', this.mapSeries);
+            console.log(this.items);
+
+
         },
         movieIDpass: function (movieID) {
             this.movieID = movieID;
-            console.log(movieID);
         },
         mouseLeave: function () {
             this.show = false;
@@ -133,9 +138,7 @@ let app = new Vue({
             genreID.forEach(element => {
                 element = this.movieGenresMAP.get(element);
                 return this.genres.push(element);
-            });
-            console.log(this.genres);
-            console.log(this.genres.slice(0,5));
+                });
             }
             else{
                 this.show = false;
@@ -144,11 +147,11 @@ let app = new Vue({
             
         },
         mapList: function(list){
-            const mapList = list.map(element=>{
+            const map = list.map(element=>{
                 let vote = element.vote_average;
                 const lang = element.original_language;
                 const imgURL =  this.posterURI + element.poster_path;
-                //conversione in array
+                //conversione voto in array
                 element.vote_average = [0, 0, 0, 0, 0];
                 //Conversione ISO 639-1 > ISO 3166-1-alpha-2 code
                 element.original_language = this.flagCodeMap[lang];
@@ -167,9 +170,7 @@ let app = new Vue({
                 }
                 return element;
             });//map
-         
-            //console.log(mapList);
-            this.moviesMap = mapList;
+            
         },
     },
     

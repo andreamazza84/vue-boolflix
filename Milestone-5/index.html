@@ -22,7 +22,7 @@
             <div class="container">
                 <a class="logo" href="#"><img src="https://image.tmdb.org/t/p/w342/wwemzKWzjKYJFfCeiB57q3r4Bcm.png" alt="[logo]"></a>
                 <div class="search-field">
-                    <input v-model="search" class="search-input" type="text" @keyup.enter="getMovie()">
+                    <input v-model="search" class="search-input" type="text" @keydown.enter="getMovie()">
                     <span class="search-btn" @click="getMovie()">Search</span>
                 </div>
             </div>
@@ -32,40 +32,51 @@
             <div class="container">
                 <div v-if="!lastSearch" class="search-results"></div>
                 <div v-else class="search-results">Results found for "{{lastSearch}}"</div>
-
-                <div v-for="movie in moviesMap" class="card">
-
-                    <div class="movie-preview" :style="{ 'background-image': 'url(' + movie.poster_path + ')' }" @mouseover="movieIDpass(movie.id)" @mouseleave="mouseLeave()">
-                        <div class="movie-description">
-                            <div class="title">Title: {{movie.title || movie.name}}</div>
-                            <div class="original-title">Original Title: {{movie.original_title || movie.original_name}}</div>
-                            <img class="flag" :src="'../img/flags/128x128/'+ movie.original_language +'.png'" :alt="movie.original_language">
-                            <span v-for="vote in movie.vote_average" class="vote">
-                                <i v-if="vote" class="fas fa-star"></i>
-                                <i v-else class="far fa-star"></i>
-                            </span>
-                            <div class="abstract">{{movie.overview}}</div>
-                            <div class="show-more">
-                                <div @click="getInfo(movie.id, movie.genre_ids)">Show {{show?'less':'more'}}</div>    
-                                <div class="cast-genres" :class="(show)?'active':''"> 
-                                    <div v-if="show" class="info">Actors:
-                                        <ul v-for="actor in cast.slice(0,4)">
-                                            <li>{{actor}}</li>
-                                        <ul>
+                
+                <div v-for="(item, index) in items" class="template">
+                    <h3>{{index}}</h3>
+                    <div class="type">
+                        <div v-for="movie in items[index]" class="card">
+        
+                            <div class="movie-preview" :style="{ 'background-image': 'url(' + movie.poster_path + ')' }" @mouseover="movieIDpass(movie.id)" @mouseleave="mouseLeave()">
+                                <div class="movie-description">
+                                    <div class="title">Title: {{movie.title || movie.name}}</div>
+                                    <div class="original-title">Original Title: {{movie.original_title || movie.original_name}}</div>
+                                    <img class="flag" :src="'../img/flags/128x128/'+ movie.original_language +'.png'" :alt="movie.original_language">
+                                    <span v-for="vote in movie.vote_average" class="vote">
+                                        <i v-if="vote" class="fas fa-star"></i>
+                                        <i v-else class="far fa-star"></i>
+                                    </span>
+                                    <div class="abstract">{{movie.overview}}</div>
+                                    <div class="show-more">
+                                        <div @click="getInfo(movie.id, movie.genre_ids)">Show {{show?'less':'more'}}</div>    
+                                        <div class="cast-genres" :class="(show)?'active':''"> 
+                                            <div v-if="show" class="info">Actors:
+                                                <ul v-for="actor in cast.slice(0,4)">
+                                                    <li>{{actor}}</li>
+                                                <ul>
+                                            </div>
+                                            <div v-if="show" class="info">Genres:
+                                                <ul v-for="genre in genres.slice(0,4)">
+                                                    <li>{{genre}}</li>
+                                                <ul>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div v-if="show" class="info">Genres:
-                                        <ul v-for="genre in genres.slice(0,4)">
-                                            <li>{{genre}}</li>
-                                        <ul>
-                                    </div>
+        
+        
                                 </div>
                             </div>
-
-
-                        </div>
+        
+                        </div> <!-- /v-for .card-->
                     </div>
+                    
+                </div>
+                    
+                    
+                    
 
-                </div> <!-- /V-for -->
+
             </div>
         </main>
         <!-- /main -->
