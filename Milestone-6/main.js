@@ -4,6 +4,8 @@ let app = new Vue({
         search: '',
         lastSearch: false,
         items: {},
+        series: [],
+        movies: [],
         mapMovies: [],
         mapSeries: [],
         fallbackPoster: '../img/fallbackimg/no-poster.png', 
@@ -27,6 +29,7 @@ let app = new Vue({
         moviesGenres: [],
         seriesGenres: [],
         allGenres: {},
+        filterItems: {},
     },
     methods: {
         //Richiesta API per popolare la lista dei film che corrispondono alla ricerca
@@ -46,13 +49,15 @@ let app = new Vue({
             .then(function (response) {
                 const movies = response.data.results;
                 self.mapList(movies);
+                self.movies = movies;
                 Vue.set(self.items, 'movies', movies);
+                Vue.set(self.filterItems, 'movies', movies);
                 
             })//then
             .catch(function (error) {
                 console.log(error);
             })//catch
-
+            
             // *** Series ***
             config = configSeries;
             config.params.query = search;
@@ -62,17 +67,20 @@ let app = new Vue({
             .then(function (response) {
                 const series = response.data.results;
                 self.mapList(series);
+                self.series = series;
                 Vue.set(self.items, 'series', series);
+                Vue.set(self.filterItems, 'series', series);
 
             })//then
             .catch(function (error) {
                 console.log(error);
             })//catch
 
+            //this.filterItems = this.items;
             //Pulizia della barra di ricerca 
             this.search = '';
             this.lastSearch = search;
-            console.log(self.items);
+            //console.log(self.items);
 
         },
         movieIDpass: function (movieID) {
@@ -171,26 +179,32 @@ let app = new Vue({
             });//map
         },
         genreFilter: function (genre, type) {
+            Vue.set(this.filterItems, 'movies', this.movies);
+            Vue.set(this.filterItems, 'series', this.series);
+            if(genre === "all"){
+                Vue.set(this.filterItems, 'movies', this.movies);
+                Vue.set(this.filterItems, 'series', this.series);
+                return
+            }
+            //Else
             let id;
             let filter;
             if (type === "movies") {
                 id = this.moviesGenresRevMap.get(genre)
                 console.log(id);
-                filter = this.items.movies.filter(element => {
+                filter = this.filterItems.movies.filter(element => {
                     return element.genre_ids.includes(id); 
                  });
-                Vue.set(self.items, 'movies', filter);
-
+                Vue.set(this.filterItems, 'movies', filter);
             }
             else if (type === "series") {
                 let filter;
                 id = this.seriesGenresRevMap.get(genre) 
                 console.log(id);
-                filter = this.items.movies.filter(element => {
+                filter = this.filterItems.movies.filter(element => {
                     return element.genre_ids.includes(id); 
                 });
-                Vue.set(self.items, 'series', filter);
-
+                Vue.set(this.filterItems, 'series', filter);
             }
             else{
                 return
@@ -198,12 +212,11 @@ let app = new Vue({
             //this.filterItems = filter;
             console.log(filter); 
         }
-    
     },
     
     created(){
         self = this;
-        let allGenres = {movies:[], series:[]};
+        let allGenres = {movies:["all"], series:["all"]};
         //Generi disponibili per i film
         axios(configMovieGenres)
         .then(function (response) {

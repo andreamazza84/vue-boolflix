@@ -43,11 +43,11 @@
                     <h3>{{index}}</h3>
 
                     <ul class="navbar-bottom">
-                        <li v-for="genre in allGenres[index]" @click="genreFilter(genre, index)">{{genre}}</li>
+                        <li v-for="genre in allGenres[index]" @click="genreFilter(genre, index), getMovie()">{{genre}}</li>
                     </ul>
 
                     <div class="type">
-                        <div v-for="movie in items[index]" class="card">
+                        <div v-for="movie in filterItems[index]" class="card">
         
                             <div class="movie-preview" :style="{ 'background-image': 'url(' + movie.poster_path + ')' }" @mouseover="movieIDpass(movie.id)" @mouseleave="mouseLeave()">
                                 <div class="movie-description">
