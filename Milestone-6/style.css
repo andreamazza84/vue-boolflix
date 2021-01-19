@@ -33,7 +33,7 @@ body{
     margin: auto;
 }
 #main > .container{
-    width: 100%;
+    width: 90%;
 }
 /* navbar-top */
 .navbar-top{
@@ -129,8 +129,10 @@ body{
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-content: flex-start;
     position: relative;
+    overflow-x: overlay;
+
 }
 /* cards */
 .card{
