@@ -9,7 +9,7 @@ body{
     min-height: 100vh;
     background-color: #1b1b1b;
     color: #fafafa;
-    overflow: auto;
+    scrollbar-width: thin;
 }
 #navbar{
     width: 100%;
@@ -200,4 +200,3 @@ body{
     display: flex;
     justify-content: space-between;
 }
-
